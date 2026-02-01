@@ -38,3 +38,6 @@ install_pkg:
 
 docker_build:
 	docker build --no-cache -t tamlep:latest -f ./deploy/docker/Dockerfile .
+# Use the python from your active environment
+ingest:
+	PYTHONPATH=src python scripts/ingest_data.py
