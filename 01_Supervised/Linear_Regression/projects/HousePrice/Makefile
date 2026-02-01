@@ -43,3 +43,5 @@ ingest:
 	PYTHONPATH=src python scripts/ingest_data.py
 train:
 	PYTHONPATH=src python scripts/train.py
+score:
+	PYTHONPATH=src python scripts/score.py
