@@ -41,3 +41,5 @@ docker_build:
 # Use the python from your active environment
 ingest:
 	PYTHONPATH=src python scripts/ingest_data.py
+train:
+	PYTHONPATH=src python scripts/train.py
