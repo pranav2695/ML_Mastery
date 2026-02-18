@@ -9,6 +9,9 @@ from sklearn.impute import SimpleImputer
 from sklearn.model_selection import GridSearchCV, StratifiedShuffleSplit
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
+from sklearn.base import BaseEstimator, TransformerMixin
+from sklearn.preprocessing import OneHotEncoder, StandardScaler, OrdinalEncoder
+from sklearn.compose import ColumnTransformer
 
 from fsds.ingestion import fetch_housing_data, load_housing_data
 
@@ -44,6 +47,55 @@ def create_pipeline(num_features, cat_features):
     )
 
     return full_pipeline
+
+
+class MLpipeline(BaseEstimator, TransformerMixin):
+    def __init__(self, add_bedrooms_per_household=True,
+                 add_total_rooms_per_household=True,
+                 population_per_household=True):
+        self.add_bedrooms_per_household = add_bedrooms_per_household
+        self.add_total_rooms_per_household = add_total_rooms_per_household
+        self.population_per_household = population_per_household 
+
+    def fit(self, X,y=None):
+        return self
+
+    def transform(self, X):
+        # We start with the original data
+        res_X = X    
+        # Condition 1: Add Rooms per Household
+        if self.add_total_rooms_per_household:
+            rooms_per_household = X[:, 3] / X[:, 6]
+            # Index 3=total rooms, 6=households
+            res_X = np.c_[res_X, rooms_per_household]      
+        # Condition 2: Add Bedrooms per Room
+        if self.add_bedrooms_per_household:
+            bedrooms_per_room = X[:, 4] / X[:, 6]
+            # Index 4=total bedrooms, 6 = households
+            res_X = np.c_[res_X, bedrooms_per_room]
+        if self.population_per_household:
+            pop_per_household = X[:, 5] / X[:, 6] 
+            # Index 4=total bedrooms, 6 = households
+            res_X = np.c_[res_X, pop_per_household]  
+        return res_X
+
+
+def create_preprocessor_pipeline(num_features, cat_features):
+    num_transformer = Pipeline([('imputer', SimpleImputer(strategy="median")),
+                                ('attribs_adder', MLpipeline(
+                                    add_bedrooms_per_household=True,
+                                    add_total_rooms_per_household=True)),
+                                    ('std_scaler', StandardScaler()),])
+    # Creating the categorical pipeline
+    categorical_transformer = Pipeline(steps=[
+        ('imputer', SimpleImputer(strategy='most_frequent')),
+        ('onehot', OneHotEncoder(handle_unknown='ignore'))
+    ])
+    preprocessor = ColumnTransformer(transformers=[
+        ('num', num_transformer, num_features),
+        ('cat', categorical_transformer, cat_features)
+    ], remainder='drop')
+    return preprocessor
 
 
 def train_and_save_model(
