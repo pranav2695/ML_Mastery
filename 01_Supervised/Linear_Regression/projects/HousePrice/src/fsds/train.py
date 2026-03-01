@@ -120,15 +120,24 @@ def train_and_save_model(
 
     pipeline = create_preprocessor_pipeline(num_attribs, cat_attribs)
     full_pipeline = Pipeline([("prep", pipeline), ("regressor", LinearRegression())])
-    housing_prepared = pipeline.fit_transform(housing_features)
 
     param_grid = [{
         # SEARCH SPACE 1: Linear Models (Ridge) and (Lasso)
-        'regressor': [Ridge(), Lasso()],
+        'regressor': [Ridge()],
         'regressor__alpha': [1, 10, 100],
         # Check if custom features help Linear models
         'prep__num__attribs_adder__add_bedrooms_per_household': [True, False],
-    }, {
+    }, 
+    {
+        'regressor': [Lasso()],
+        'regressor__alpha': [1, 10, 100],
+        # Increase iterations from 1000 to 5000 or 10000
+        'regressor__max_iter': [5000], 
+        # Slightly increase tolerance to help it converge faster
+        'regressor__tol': [0.1], 
+        'prep__num__attribs_adder__add_bedrooms_per_household': [True, False],
+    },
+    {
         # SEARCH SPACE 2: Ensemble Models (Random Forest)
         'regressor': [RandomForestRegressor(random_state=42)],
         'regressor__n_estimators': [50, 100],
@@ -139,7 +148,7 @@ def train_and_save_model(
     grid_search = GridSearchCV(
         full_pipeline, param_grid, cv=3, scoring="neg_mean_squared_error"
     )
-    grid_search.fit(housing_prepared, housing_labels)
+    grid_search.fit(housing_features, housing_labels)
 
     os.makedirs(os.path.dirname(model_path), exist_ok=True)
     joblib.dump((grid_search.best_estimator_, pipeline), model_path)
