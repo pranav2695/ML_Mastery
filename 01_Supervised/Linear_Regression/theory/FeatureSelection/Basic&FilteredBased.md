@@ -31,3 +31,21 @@ why we do the feature selection, first curse of dimensionality (with certain num
 2. wrapper method 
 3. Embedded techniques
 4. Hybrid techniques
+## Mutual Information 
+It is the measure of the dependency between two variables. It quantifies the amount of information obtained about one random variable through observing the other random variable. It is the fundamental quantity in information theory  
+$MI = \sum_{x=X}\sum_{y=Y}p(x,y)\log[p(x,y)/p(x)p(y)]$    
+
+p(x,y)---> joint probability   
+p(x), p(y) ---> marginal probability
+- we will create the contingency table and for each value in the table we will calculate using above formula 
+- it can capture linear and non linear data both 
+- it will also work on the numrical data also, it will create the histogram 
+- we have function called mutual_info_classif, this is for categorical data. for regression we have mutual_info_regression. 
+- we can use with the selectkbest   
+## Disadvantages 
+- Estimation difficulty 
+- Assumes Large sample sizes
+- Computionally Intensive  
+- Difficulty with continous variables 
+- No Direct indication of the nature of relationship 
+- Doesnt account for redundancy 

@@ -34,4 +34,11 @@ Note: we can provide the tolerance in the sklearn,
 1. Computational complexity 
 2. risk of overfitting 
 3. Model specific
+## Recursive feature elimination (RFE)
+It is kind of hybrid technique, which uses wrapper and embedded both in background. we select the models which will give us coef_ or feature_importance, then we run this model on our data and calculate the feature_importance or coef_, we eliminate the feature have lowest value, number of time it will run based on how many feature you want to keep it in the model for the prediction.  
+Note we have RFE Clas in scikit learn feature_selection, it will give the ranking of the features 
+there is a variation also RFECV
+
+
+
 
