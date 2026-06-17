@@ -35,4 +35,9 @@ forecast = m.fit(df).predict(future)
 fig = m.plot(forecast)  
 # Seasonality, Holiday Effects, And Regressors  
 we will have column holidays and ds and a row for each occurance of the holiday. it must include all occurance of the holiday, both in the past(back as far as the historical data go) and in the future (out as far as the forecast is being made).  
-we can also include the lower window and upper window as a columns
+we can also include the lower window and upper window as a columns  
+## Fourier Order of seasonalities  
+Seasonalities are estimated using partial Fourier sum. The number of terms in the partial sum is a parameter that determines how quickly the seasonality can change.  
+To fit the higher frequecy changes and generally be less smooth. Increasing the number of fourier terms allows the seasonality to fit faster changing cycles, but can also lead to overfitting.  
+if we can also fit   
+we cam use the different seasonality model like additive or multiplicative.  
