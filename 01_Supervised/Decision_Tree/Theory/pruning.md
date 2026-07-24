@@ -16,3 +16,12 @@ this method halts the tree construction early. it can be done in various ways: b
 - Maximum features 
 ## Post pruning    
 This method allows the decision tree to fully grow then prune the tree based on the error complexity trade off. the basic idea is to replace a whole subtree by a leaf node, and assign the most common class in that subtree to the leaf node.
+## Advantages of pre pruning 
+- simplicity 
+- computational efficiency 
+- reduced overfitting 
+- improved interpretability 
+## Disadvantage 
+- risk of underfitting 
+- required fine tuning : every new data we need to do the fine tunning again.
+- short sighedness - can prune good nodes if they come after a bad node 
